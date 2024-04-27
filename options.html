@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Workforce Extension - Settings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="options-container">
+        <h1>Settings</h1>
+        <form>
+            <div class="form-group">
+                <label for="aiModel">AI Model:</label>
+                <select id="aiModel">
+                    <option value="openai">OpenAI</option>
+                    <option value="inworld">Inworld AI</option>
+                    <option value="anthropic">Anthropic</option>
+                    <option value="stableDiffusion">Stable Diffusion</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="operationMode">Operation Mode:</label>
+                <select id="operationMode">
+                    <option value="stealth">Stealth</option>
+                    <option value="active">Active</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="autoPost">Automatic Posting:</label>
+                <input type="checkbox" id="autoPost">
+            </div>
+            <div class="form-group">
+                <label for="analyticsTracking">Enable Analytics Tracking:</label>
+                <input type="checkbox" id="analyticsTracking" checked>
+            </div>
+            <button type="submit" id="saveOptionsBtn">Save Options</button>
+        </form>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>

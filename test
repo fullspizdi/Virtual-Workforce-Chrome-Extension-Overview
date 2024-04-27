@@ -1,0 +1,68 @@
+// test/index.test.js
+// This file contains tests for the Virtual Workforce Chrome Extension.
+
+describe('Chrome Extension Functionality Tests', () => {
+    test('Background Initialization on Installation', () => {
+        const spySet = jest.spyOn(chrome.storage.local, 'set');
+        chrome.runtime.onInstalled.dispatch();
+        expect(spySet).toHaveBeenCalledWith({ active: true }, expect.any(Function));
+    });
+
+    test('Content Posting Functionality', async () => {
+        const mockContent = "Test content for Medium";
+        const spyPostContent = jest.spyOn(AIIntegration, 'postContentToMedium').mockImplementation((content, callback) => {
+            callback(true);
+        });
+
+        await handlePostContent(mockContent);
+        expect(spyPostContent).toHaveBeenCalledWith(mockContent, expect.any(Function));
+    });
+
+    test('Engagement Analysis Functionality', async () => {
+        const mockEngagementData = { views: 100, likes: 10, comments: 5 };
+        jest.spyOn(AIIntegration, 'fetchEngagementData').mockResolvedValue(mockEngagementData);
+
+        const data = await analyzeEngagement();
+        expect(data).toEqual(mockEngagementData);
+    });
+
+    test('Popup UI Interaction - Activate Extension', () => {
+        document.body.innerHTML = `
+            <div id="extensionStatus">Inactive</div>
+            <button id="toggleExtensionBtn"></button>
+        `;
+
+        require('../popup.js');
+        const toggleBtn = document.getElementById('toggleExtensionBtn');
+        const statusDisplay = document.getElementById('extensionStatus');
+
+        toggleBtn.dispatchEvent(new MouseEvent('click'));
+        expect(statusDisplay.textContent).toBe('Active');
+    });
+
+    test('Options Saving Functionality', () => {
+        document.body.innerHTML = `
+            <select id="aiModel"></select>
+            <select id="operationMode"></select>
+            <input type="checkbox" id="autoPost">
+            <input type="checkbox" id="analyticsTracking">
+            <button id="saveOptionsBtn"></button>
+        `;
+
+        require('../options.js');
+        const saveBtn = document.getElementById('saveOptionsBtn');
+        const spySet = jest.spyOn(chrome.storage.local, 'set');
+
+        saveBtn.dispatchEvent(new MouseEvent('click'));
+        expect(spySet).toHaveBeenCalled();
+    });
+});
+
+// Setup and teardown for all tests
+beforeEach(() => {
+    jest.clearAllMocks();
+});
+
+afterAll(() => {
+    jest.restoreAllMocks();
+});
